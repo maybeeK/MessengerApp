@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 
-namespace MessengerApp
+namespace MessengerApp.Server
 {
     public class Program
     {
