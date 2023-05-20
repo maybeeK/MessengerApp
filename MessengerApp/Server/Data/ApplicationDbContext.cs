@@ -14,6 +14,12 @@ namespace MessengerApp.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Chat>().HasMany(e=>e.Users).WithOne().HasPrincipalKey(e=>e.Id);
+            builder.Entity<Message>().HasOne(e => e.Sender).WithOne().HasPrincipalKey<Message>(e=>e.Id);
+            base.OnModelCreating(builder);
+        }
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
     }

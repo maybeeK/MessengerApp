@@ -6,7 +6,6 @@ namespace MessengerApp.Server.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [ForeignKey("Id")]
-        public virtual List<Chat> UserChats { get; set; } = new List<Chat>();
+
     }
 }

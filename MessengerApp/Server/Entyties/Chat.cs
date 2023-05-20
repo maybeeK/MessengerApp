@@ -8,9 +8,9 @@ namespace MessengerApp.Server.Entyties
         public int Id { get; set; }
 
         [ForeignKey("Id")]
-        public List<ApplicationUser>? Users { get; set; }
+        public virtual List<ApplicationUser>? Users { get; set; } = new List<ApplicationUser>();
 
         [ForeignKey("Id")]
-        public List<Message>? Messages { get; set; }
+        public virtual List<Message>? Messages { get; set; } = new List<Message>();
     }
 }
