@@ -1,5 +1,7 @@
 using MessengerApp.Server.Data;
 using MessengerApp.Server.Models;
+using MessengerApp.Server.Services;
+using MessengerApp.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -41,6 +43,8 @@ namespace MessengerApp.Server
 
             builder.Services.AddAuthentication()
                 .AddIdentityServerJwt();
+
+            builder.Services.AddScoped<IDirectService, DirectService>();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
