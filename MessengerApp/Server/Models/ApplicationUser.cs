@@ -6,6 +6,6 @@ namespace MessengerApp.Server.Models
 {
     public class ApplicationUser : IdentityUser
     {
-
+        public virtual List<ChatUser> UserChats { get; set; } = new List<ChatUser>();
     }
 }

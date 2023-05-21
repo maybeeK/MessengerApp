@@ -176,15 +176,53 @@ namespace MessengerApp.Server.Migrations
                     b.ToTable("Chats");
                 });
 
+            modelBuilder.Entity("MessengerApp.Server.Entyties.ChatUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatUsers");
+                });
+
             modelBuilder.Entity("MessengerApp.Server.Entyties.Message", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
@@ -195,9 +233,6 @@ namespace MessengerApp.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ChatId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -216,9 +251,6 @@ namespace MessengerApp.Server.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<int?>("MessageId")
-                        .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -248,12 +280,6 @@ namespace MessengerApp.Server.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
-
-                    b.HasIndex("MessageId")
-                        .IsUnique()
-                        .HasFilter("[MessageId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -403,24 +429,42 @@ namespace MessengerApp.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MessengerApp.Server.Entyties.Message", b =>
+            modelBuilder.Entity("MessengerApp.Server.Entyties.ChatUser", b =>
                 {
-                    b.HasOne("MessengerApp.Server.Entyties.Chat", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("Id")
+                    b.HasOne("MessengerApp.Server.Entyties.Chat", "Chat")
+                        .WithMany()
+                        .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("MessengerApp.Server.Models.ApplicationUser", "User")
+                        .WithMany("UserChats")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MessengerApp.Server.Models.ApplicationUser", b =>
+            modelBuilder.Entity("MessengerApp.Server.Entyties.Message", b =>
                 {
-                    b.HasOne("MessengerApp.Server.Entyties.Chat", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ChatId");
+                    b.HasOne("MessengerApp.Server.Entyties.Chat", "Chat")
+                        .WithMany()
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MessengerApp.Server.Entyties.Message", null)
-                        .WithOne("Sender")
-                        .HasForeignKey("MessengerApp.Server.Models.ApplicationUser", "MessageId");
+                    b.HasOne("MessengerApp.Server.Models.ApplicationUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -474,17 +518,9 @@ namespace MessengerApp.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MessengerApp.Server.Entyties.Chat", b =>
+            modelBuilder.Entity("MessengerApp.Server.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Messages");
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("MessengerApp.Server.Entyties.Message", b =>
-                {
-                    b.Navigation("Sender")
-                        .IsRequired();
+                    b.Navigation("UserChats");
                 });
 #pragma warning restore 612, 618
         }
