@@ -173,7 +173,7 @@ namespace MessengerApp.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chats");
+                    b.ToTable("Chats", (string)null);
                 });
 
             modelBuilder.Entity("MessengerApp.Server.Entyties.ChatUser", b =>
@@ -197,7 +197,7 @@ namespace MessengerApp.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ChatUsers");
+                    b.ToTable("ChatUsers", (string)null);
                 });
 
             modelBuilder.Entity("MessengerApp.Server.Entyties.Message", b =>
@@ -224,7 +224,7 @@ namespace MessengerApp.Server.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("MessengerApp.Server.Models.ApplicationUser", b =>

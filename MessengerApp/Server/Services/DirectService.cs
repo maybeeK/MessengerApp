@@ -1,6 +1,7 @@
 ﻿using MessengerApp.Server.Data;
 using MessengerApp.Server.Entyties;
 using MessengerApp.Server.Services.Interfaces;
+using MessengerApp.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace MessengerApp.Server.Services
@@ -14,18 +15,50 @@ namespace MessengerApp.Server.Services
         }
         public async Task<IEnumerable<Chat>> GetUserChats(string userId)
         {
-            return await _context.Chats.Where(e => e.Users.Any(e => e.Id == userId)).ToListAsync();
+            return await _context.ChatUsers.Where(e=>e.UserId == userId).Select(e=> new Chat { Id = e.Id}).ToListAsync();
         }
 
         public async Task<IEnumerable<Message>> GetChatMessages(int chatId)
         {
-            var chat = await _context.Chats.FirstOrDefaultAsync(e => e.Id == chatId);
-            return chat.Messages;
+            return await _context.Messages.Where(e=>e.ChatId==chatId).ToListAsync();
         }
-        public async Task<bool> AddUserToChat(string userId, int chatId)
+        public async Task<ChatUser> CreateChat(string creatorId)
         {
-            //To Do
-            return true;
+            var createdChat = await _context.AddAsync(new Chat());
+            var chatUser = await AddUserToChat(creatorId, createdChat.Entity.Id);
+            await _context.SaveChangesAsync();
+            return chatUser;
+        }
+        public async Task<ChatUser> AddUserToChat(string userId, int chatId)
+        {
+            if (await IsUserInChat(userId, chatId))
+            {
+                return null;
+            }
+            else
+            {
+                var chatUser = new ChatUser { UserId = userId, ChatId = chatId };
+                await _context.ChatUsers.AddAsync(chatUser);
+                await _context.SaveChangesAsync();
+                return chatUser;
+            }
+        }
+        public async Task<Message> AddMessageToChat(MessageDTO messageDTO)
+        {
+            var message = new Message {
+                Text = messageDTO.Text,
+                ChatId = messageDTO.ChatId,
+                SenderId = messageDTO.SenderId
+            };
+
+            await _context.Messages.AddAsync(message);
+            await _context.SaveChangesAsync();
+            
+            return message;
+        }
+        private async Task<bool> IsUserInChat(string userId, int chatId)
+        {
+           return await _context.ChatUsers.AnyAsync(e => e.UserId == userId && e.ChatId == chatId);
         }
     }
 }

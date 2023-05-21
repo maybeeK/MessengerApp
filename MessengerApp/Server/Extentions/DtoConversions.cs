@@ -8,12 +8,9 @@ namespace MessengerApp.Server.Extentions
         public static IEnumerable<ChatDTO> ConvertToDto(this IEnumerable<Chat> chats)
         {
             return (from chat in chats
-                    select new ChatDTO
-                    {
-                        Id = chat.Id,
-                        MessagesId = chat.Messages?.Select(m => m.Id).ToList(),
-                        UsersId = chat.Users?.Select(m => m.Id).ToList()
-                    });
+                   select new ChatDTO { 
+                        Id= chat.Id
+                   }).ToList();
         }
 
         public static IEnumerable<MessageDTO> ConvertToDto(this IEnumerable<Message> messages)
@@ -22,9 +19,29 @@ namespace MessengerApp.Server.Extentions
                     select new MessageDTO
                     {
                         Id = message.Id,
-                        SenderId = message.Sender.Id,
-                        Text = message.Text
-                    });
+                        Text = message.Text,
+                        ChatId = message.ChatId,
+                        SenderId = message.SenderId
+                    }).ToList();
+        }
+
+        public static IEnumerable<ChatUserDTO> ConvertToDto(this IEnumerable<ChatUser> chatUsers)
+        {
+            return (from user in chatUsers 
+                    select new ChatUserDTO {
+                        Id = user.Id,
+                        ChatId = user.ChatId,
+                        UserId = user.UserId
+                    }).ToList();
+        }
+
+        public static ChatUserDTO ConvertToDto(this ChatUser user)
+        {
+            return new ChatUserDTO {
+                UserId= user.UserId,
+                ChatId= user.ChatId,
+                Id= user.Id
+            };
         }
     }
 }

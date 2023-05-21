@@ -39,8 +39,8 @@ namespace MessengerApp.Server.Controllers
         }
 
         [HttpGet]
-        [Route("{charId}/Messages")]
-        public async Task<ActionResult<IEnumerable<ChatDTO>>> GetChatMessages(int chatId)
+        [Route("Chats/{charId}/Messages")]
+        public async Task<ActionResult<IEnumerable<MessageDTO>>> GetChatMessages(int chatId)
         {
             try
             {
@@ -54,6 +54,60 @@ namespace MessengerApp.Server.Controllers
                 var messagesDto = messages.ConvertToDto();
 
                 return Ok(messagesDto);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ChatUserDTO>> CreateChat([FromBody] string creatorId)
+        {
+            try
+            {
+                var chatUser = await _directService.CreateChat(creatorId);
+
+                var chatUserDto = chatUser.ConvertToDto();
+                
+                return Ok(chatUserDto);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ChatUserDTO>> AddUserToChat([FromBody] AddUserToChatDTO userToChatDTO)
+        {
+            try
+            {
+                var user = await _directService.AddUserToChat(userToChatDTO.UserId, userToChatDTO.ChatId);
+
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
+                var userDto = user.ConvertToDto();
+
+                return Ok(userDto);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<MessageDTO>> AddMessageToChat([FromBody]MessageDTO messageDto)
+        {
+            try
+            {
+                var addedMessage = await _directService.AddMessageToChat(messageDto);
+
+                return Ok(addedMessage);
             }
             catch (Exception e)
             {

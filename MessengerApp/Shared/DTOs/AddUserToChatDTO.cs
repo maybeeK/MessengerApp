@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace MessengerApp.Shared.DTOs
 {
-    public class ChatDTO
+    public class AddUserToChatDTO
     {
-        public int Id { get; set; }
+        public string UserId { get; set; }
+        public int ChatId { get; set; }
     }
 }
