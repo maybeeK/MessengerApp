@@ -1,5 +1,6 @@
 ﻿using MessengerApp.Client.Sevices.Interfaces;
 using MessengerApp.Shared.DTOs;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -19,9 +20,10 @@ namespace MessengerApp.Client.Pages
         {
             try
             {
-                var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity?.Name;
-
+                var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                UserId = state.User.FindFirst(e=>e.Type=="sub")?.Value;
                 UserChats = (await UserDirectService.GetChats(UserId)).ToList();
+                ChatMessages = new();
             }
             catch (Exception)
             {
