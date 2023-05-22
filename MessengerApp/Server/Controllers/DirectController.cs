@@ -39,7 +39,7 @@ namespace MessengerApp.Server.Controllers
         }
 
         [HttpGet]
-        [Route("Chats/{charId}/Messages")]
+        [Route("Chats/{chatId}/Messages")]
         public async Task<ActionResult<IEnumerable<MessageDTO>>> GetChatMessages(int chatId)
         {
             try
@@ -106,6 +106,11 @@ namespace MessengerApp.Server.Controllers
             try
             {
                 var addedMessage = await _directService.AddMessageToChat(messageDto);
+
+                if (addedMessage == null)
+                {
+                    return BadRequest();
+                }
 
                 return Ok(addedMessage);
             }
