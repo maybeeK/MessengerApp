@@ -12,5 +12,6 @@ namespace MessengerApp.Shared.DTOs
         public string Text { get; set; }
         public int ChatId { get; set; }
         public string SenderId { get; set; }
+        public DateTime Time { get; set; } = DateTime.Now;
     }
 }

@@ -48,7 +48,8 @@ namespace MessengerApp.Server.Services
             var message = new Message {
                 Text = messageDTO.Text,
                 ChatId = messageDTO.ChatId,
-                SenderId = messageDTO.SenderId
+                SenderId = messageDTO.SenderId,
+                Time = messageDTO.Time
             };
 
             await _context.Messages.AddAsync(message);

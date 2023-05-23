@@ -21,7 +21,8 @@ namespace MessengerApp.Server.Extentions
                         Id = message.Id,
                         Text = message.Text,
                         ChatId = message.ChatId,
-                        SenderId = message.SenderId
+                        SenderId = message.SenderId,
+                        Time = message.Time
                     }).ToList();
         }
 

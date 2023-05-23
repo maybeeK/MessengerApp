@@ -7,7 +7,7 @@ namespace MessengerApp.Server.Entyties
     {
         public int Id { get; set; }
         public string? Text { get; set; }
-
+        public DateTime Time { get; set; } = DateTime.Now;
         public int ChatId { get; set; }
         [ForeignKey("ChatId")]
         public virtual Chat? Chat { get; set; }
