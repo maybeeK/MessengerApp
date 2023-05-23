@@ -24,9 +24,10 @@ namespace MessengerApp.Server.Services
         }
         public async Task<ChatUser> CreateChat(string creatorId)
         {
-            var createdChat = await _context.AddAsync(new Chat());
-            var chatUser = await AddUserToChat(creatorId, createdChat.Entity.Id);
+            var chatToCreate = new Chat();
+            await _context.Chats.AddAsync(chatToCreate);
             await _context.SaveChangesAsync();
+            var chatUser = await AddUserToChat(creatorId, chatToCreate.Id);
             return chatUser;
         }
         public async Task<ChatUser> AddUserToChat(string userId, int chatId)

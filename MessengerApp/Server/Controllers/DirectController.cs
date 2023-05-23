@@ -61,7 +61,7 @@ namespace MessengerApp.Server.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public async Task<ActionResult<ChatUserDTO>> CreateChat([FromBody] string creatorId)
         {
             try
@@ -78,7 +78,7 @@ namespace MessengerApp.Server.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public async Task<ActionResult<ChatUserDTO>> AddUserToChat([FromBody] AddUserToChatDTO userToChatDTO)
         {
             try
@@ -100,7 +100,7 @@ namespace MessengerApp.Server.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public async Task<ActionResult<MessageDTO>> AddMessageToChat([FromBody]MessageDTO messageDto)
         {
             try

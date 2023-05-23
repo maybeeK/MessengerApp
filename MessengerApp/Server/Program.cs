@@ -71,6 +71,12 @@ namespace MessengerApp.Server
 
             app.UseRouting();
 
+
+            app.UseCors(cors => cors.AllowAnyMethod()
+                                    .AllowAnyHeader()
+                                    .SetIsOriginAllowed(e => true)
+                                    .AllowCredentials());
+
             app.UseIdentityServer();
             app.UseAuthorization();
 
