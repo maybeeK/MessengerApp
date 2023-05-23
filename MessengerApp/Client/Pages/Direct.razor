@@ -3,3 +3,38 @@
 @attribute [Authorize]
 
 <h2>Direct page</h2>
+
+<div class="d-flex flex-column align-items-stretch flex-shrink-0 p-3 border-bottom text-decoration-none w-25 bg-dark bg-opacity-10">
+    <a class="d-flex align-items-center flex-shrink-0 p-3 link-light text-decoration-none border-bottom">
+        <span class="fs-5 fw-normal text-black-50">
+            Your Chats
+        </span>
+    </a>
+    <div class="list-group list-group-flush border-bottom overflow-auto">
+        <a class="list-group-item list-group-item-info user-select-none" @onclick="CreateChat">
+            <div class="col-10 mb-1 small">
+                <span class="oi oi-plus" aria-hidden="true"></span>&ensp;Create Chat
+            </div>
+        </a>
+        @if (UserChats != null)
+        {
+            @foreach (var item in UserChats)
+            {
+                <a class="list-group-item list-group-item-action @IsActive(item) py-3 lh-sm user-select-none" @onclick="()=>OpenChat(item.Id)">
+                    <div class="col-10 mb-1 small">
+                        ChatID: @item.Id
+                    </div>
+                </a>
+            }
+        }
+    </div>
+</div>
+
+
+@code {
+    public string IsActive(ChatDTO chat)
+    {
+        return chat.Id == OpenedChat?.Id ? "active" : "";
+    }
+
+}
