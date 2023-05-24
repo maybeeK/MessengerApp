@@ -1,0 +1,72 @@
+﻿@using MessengerApp.Client.Sevices.Interfaces;
+<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select user to add to chat with ID: @ChatId</h5>
+            </div>
+            <div class="modal-body">
+                @if (Users != null)
+                {
+                    <select @bind="UserId" @onclick="IsAddButtonAvailable" class="form-select">
+                        <option value="">------Add user to chat!------</option>
+                        @foreach (var user in Users)
+                        {
+                            <option value="@user.Id">@user.Email</option>
+                        }
+                    </select>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" disabled="@IsDisabled" class="btn btn-primary">Add to chat!</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code {
+    [Inject]
+    public IUserDirectService UserDirectService { get; set; }
+    [Parameter]
+    public int? ChatId {get; set;}
+
+
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = false;
+    public bool IsDisabled { get; set; } = true;
+
+
+    public List<AppUserDTO> Users { get; set; }
+    public string? UserId { get; set; }
+
+    public async void Open()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        Users = (await UserDirectService.GetUsersWhichNotInChat(ChatId.GetValueOrDefault())).ToList();
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        StateHasChanged();
+    }
+
+    private void IsAddButtonAvailable()
+    {
+        IsDisabled = UserId == null || UserId == string.Empty;
+    }
+}

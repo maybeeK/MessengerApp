@@ -38,7 +38,7 @@
         {
             <div class="card-header d-flex justify-content-between align-items-center p-3">
                 <h5 class="mb-0">ChatID: @OpenedChat.Id</h5>
-                <button type="button" class="btn btn-secondary btn-sm" data-mdb-ripple-color="dark">
+                <button type="button" class="btn btn-secondary btn-sm" data-mdb-ripple-color="dark" @onclick="() => Modal.Open()">
                     Add User
                 </button>
             </div>
@@ -86,7 +86,12 @@
 
 </div>
 
+<AddUserModal @ref="Modal" ChatId="OpenedChat?.Id"></AddUserModal>
+
+
 @code {
+    private AddUserModal Modal { get; set; }
+
     public string IsActive(ChatDTO chat)
     {
         return chat.Id == OpenedChat?.Id ? "active" : "";
