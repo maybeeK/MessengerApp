@@ -34,6 +34,7 @@ namespace MessengerApp.Client.Pages
         public async Task OpenChat(int chatId)
         {
             OpenedChat = UserChats.First(e => e.Id == chatId);
+            ChatMessages = (await UserDirectService.GetChatMessages(OpenedChat.Id)).ToList();
             StateHasChanged();
         }
         public async Task CreateChat()
