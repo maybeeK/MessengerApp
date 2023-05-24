@@ -129,6 +129,31 @@ namespace MessengerApp.Client.Sevices
             }
         }
 
+        public async Task<IEnumerable<AppUserDTO>> GetUsersWhichNotInChat(int chatId)
+        {
+            try
+            {
+                var usersResponse = await _httpClient.GetAsync("api/Direct/Users");
+                var chatUsersResponse = await _httpClient.GetAsync($"api/Direct/Chats/{chatId}/Users");
+
+                if (usersResponse.IsSuccessStatusCode && chatUsersResponse.IsSuccessStatusCode)
+                {
+                    var users = await usersResponse.Content.ReadFromJsonAsync<List<AppUserDTO>>();
+                    var chatUsers = await chatUsersResponse.Content.ReadFromJsonAsync<List<AppUserDTO>>();
+
+                    var usersNotInChat = users.Where(e=>!chatUsers.Any(el=>el.Id==e.Id)).ToList();
+
+                    return usersNotInChat;
+                }
+                return default(IEnumerable<AppUserDTO>);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<MessageDTO> SendMessage(MessageDTO messageDTO)
         {
             try

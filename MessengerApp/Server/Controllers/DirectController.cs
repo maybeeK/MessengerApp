@@ -17,6 +17,61 @@ namespace MessengerApp.Server.Controllers
         }
 
         [HttpGet]
+        [Route("Chats/{chatId}/Users")]
+        public async Task<ActionResult<IEnumerable<AppUserDTO>>> GetChatUsers(int chatId)
+        {
+            try
+            {
+                var chatUsers = await _directService.GetChatUsers(chatId);
+                var users = await _directService.GetUsers();
+
+                var usersInChat = (from user in chatUsers
+                                   join appUser in users
+                                   on user.UserId equals appUser.Id
+                                   where user.ChatId == chatId
+                                   select new AppUserDTO
+                                   {
+                                       Id = user.UserId,
+                                       Email = appUser.Email
+                                   }).ToList();
+
+                if (usersInChat.Count == 0)
+                {
+                    return NoContent();
+                }
+
+                return usersInChat;
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("Users")]
+        public async Task<ActionResult<IEnumerable<AppUserDTO>>> GetUsers()
+        {
+            try
+            {
+                var users = await _directService.GetUsers();
+
+                if (users == null)
+                {
+                    throw new Exception();
+                }
+
+                var usersDto = users.ConvertToDto();
+
+                return Ok(usersDto);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("{userId}/Chats")]
         public async Task<ActionResult<IEnumerable<ChatDTO>>> GetUserChats(string userId)
         {

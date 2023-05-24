@@ -1,5 +1,6 @@
 ﻿using MessengerApp.Server.Data;
 using MessengerApp.Server.Entyties;
+using MessengerApp.Server.Models;
 using MessengerApp.Server.Services.Interfaces;
 using MessengerApp.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +62,16 @@ namespace MessengerApp.Server.Services
         private async Task<bool> IsUserInChat(string userId, int chatId)
         {
            return await _context.ChatUsers.AnyAsync(e => e.UserId == userId && e.ChatId == chatId);
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        public async Task<IEnumerable<ChatUser>> GetChatUsers(int chatId)
+        {
+            return await _context.ChatUsers.Where(e=>e.ChatId == chatId).ToListAsync();
         }
     }
 }

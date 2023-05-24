@@ -14,5 +14,6 @@ namespace MessengerApp.Client.Sevices.Interfaces
         Task<ChatUserDTO> CreateChat(string creatorId);
         Task<ChatUserDTO> AddUserToChat(string userId, int chatId);
         Task<MessageDTO> SendMessage(MessageDTO messageDTO);
+        Task<IEnumerable<AppUserDTO>> GetUsersWhichNotInChat(int chatId);
     }
 }
