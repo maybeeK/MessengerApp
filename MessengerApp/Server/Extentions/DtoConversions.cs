@@ -1,10 +1,21 @@
 ﻿using MessengerApp.Server.Entyties;
+using MessengerApp.Server.Models;
 using MessengerApp.Shared.DTOs;
 
 namespace MessengerApp.Server.Extentions
 {
     public static class DtoConversions
     {
+        public static IEnumerable<AppUserDTO> ConvertToDto(this IEnumerable<ApplicationUser> users)
+        {
+            return (from user in users
+                    select new AppUserDTO
+                    {
+                        Id= user.Id,
+                        Email = user.Email
+                    }).ToList();
+        }
+
         public static IEnumerable<ChatDTO> ConvertToDto(this IEnumerable<Chat> chats)
         {
             return (from chat in chats
