@@ -71,8 +71,8 @@
 
             <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
                 <input type="text" class="form-control form-control-lg"
-                   placeholder="Type message">
-                <button class="btn btn-info btn-sm m-sm-3">Send</button>
+                   placeholder="Type message" @bind-value="MessageText" @bind-value:event="oninput" @onkeyup="HandleMessageInput">
+                <button class="btn btn-info btn-sm m-sm-3" @onclick="SendMessage">Send</button>
             </div>
         }
         else
@@ -100,5 +100,12 @@
     public bool IsUserMessageOwner(MessageDTO message)
     {
         return message.SenderId == UserId;
+    }
+    private async Task HandleMessageInput(KeyboardEventArgs args)
+    {
+        if (args.Key.Equals("Enter"))
+        {
+            await SendMessage();
+        }
     }
 }

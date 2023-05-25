@@ -15,7 +15,7 @@ namespace MessengerApp.Client.Pages
         public List<ChatDTO>? UserChats { get; set; }
         public List<MessageDTO>? ChatMessages { get; set; }
         public ChatDTO? OpenedChat { get; set; }
-
+        public string MessageText { get; set; } = string.Empty;
         protected override async Task OnInitializedAsync()
         {
             try
@@ -29,6 +29,24 @@ namespace MessengerApp.Client.Pages
             {
 
                 throw;
+            }
+        }
+        public async Task SendMessage()
+        {
+            if (MessageText != string.Empty)
+            {
+                var messageToSendDTO = new MessageDTO()
+                {
+                    Text = MessageText,
+                    ChatId = OpenedChat.Id,
+                    SenderId = UserId,
+                    Time = DateTime.Now
+                };
+
+                Console.WriteLine($"Message to send:\n{messageToSendDTO.Text}\n{messageToSendDTO.ChatId}\n{messageToSendDTO.SenderId}\n{(messageToSendDTO.Time.ToString("hh:mm:ddd:yyyy"))}");
+
+                await UserDirectService.SendMessage(messageToSendDTO);
+                MessageText = string.Empty; 
             }
         }
         public async Task OpenChat(int chatId)
