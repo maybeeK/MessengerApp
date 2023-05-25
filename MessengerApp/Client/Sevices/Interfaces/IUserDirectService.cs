@@ -12,7 +12,7 @@ namespace MessengerApp.Client.Sevices.Interfaces
         Task<IEnumerable<ChatDTO>> GetChats(string userId);
         Task<IEnumerable<MessageDTO>> GetChatMessages(int chatId);
         Task<ChatUserDTO> CreateChat(string creatorId);
-        Task<ChatUserDTO> AddUserToChat(string userId, int chatId);
+        Task<ChatUserDTO> AddUserToChat(AddUserToChatDTO userTochat);
         Task<MessageDTO> SendMessage(MessageDTO messageDTO);
         Task<IEnumerable<AppUserDTO>> GetUsersWhichNotInChat(int chatId);
     }

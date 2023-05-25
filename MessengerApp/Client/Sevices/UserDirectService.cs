@@ -13,11 +13,10 @@ namespace MessengerApp.Client.Sevices
             _httpClient = httpClient;
         }
 
-        public async Task<ChatUserDTO> AddUserToChat(string userId, int chatId)
+        public async Task<ChatUserDTO> AddUserToChat(AddUserToChatDTO userTochat)
         {
             try
             {
-                var userTochat = new AddUserToChatDTO() { ChatId= chatId, UserId = userId };
                 var response = await _httpClient.PostAsJsonAsync<AddUserToChatDTO>("api/Direct/AddUserToChat", userTochat);
 
                 if (response.IsSuccessStatusCode)
