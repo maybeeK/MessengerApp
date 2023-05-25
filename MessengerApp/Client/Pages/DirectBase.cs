@@ -2,6 +2,7 @@
 using MessengerApp.Shared.DTOs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 
 namespace MessengerApp.Client.Pages
 {
@@ -11,11 +12,14 @@ namespace MessengerApp.Client.Pages
         public IUserDirectService UserDirectService { get; set; }
         [Inject]
         public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
         public string? UserId { get; set; }
         public List<ChatDTO>? UserChats { get; set; }
         public List<MessageDTO>? ChatMessages { get; set; }
         public ChatDTO? OpenedChat { get; set; }
         public string MessageText { get; set; } = string.Empty;
+        public ElementReference ChatAreaRef;
         protected override async Task OnInitializedAsync()
         {
             try
@@ -54,6 +58,7 @@ namespace MessengerApp.Client.Pages
             OpenedChat = UserChats.First(e => e.Id == chatId);
             ChatMessages = (await UserDirectService.GetChatMessages(OpenedChat.Id)).ToList();
             StateHasChanged();
+            JSRuntime.InvokeVoidAsync("ScrollChatToBottom", ChatAreaRef);
         }
         public async Task CreateChat()
         {
