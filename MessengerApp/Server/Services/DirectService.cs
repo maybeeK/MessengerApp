@@ -16,7 +16,7 @@ namespace MessengerApp.Server.Services
         }
         public async Task<IEnumerable<Chat>> GetUserChats(string userId)
         {
-            return await _context.ChatUsers.Where(e=>e.UserId == userId).Select(e=> new Chat { Id = e.Id}).ToListAsync();
+            return await _context.ChatUsers.Where(e=>e.UserId == userId).Select(e=> new Chat { Id = e.ChatId}).ToListAsync();
         }
 
         public async Task<IEnumerable<Message>> GetChatMessages(int chatId)
@@ -33,17 +33,10 @@ namespace MessengerApp.Server.Services
         }
         public async Task<ChatUser> AddUserToChat(string userId, int chatId)
         {
-            if (await IsUserInChat(userId, chatId))
-            {
-                return null;
-            }
-            else
-            {
-                var chatUser = new ChatUser { UserId = userId, ChatId = chatId };
-                await _context.ChatUsers.AddAsync(chatUser);
-                await _context.SaveChangesAsync();
-                return chatUser;
-            }
+            var chatUser = new ChatUser { UserId = userId, ChatId = chatId };
+            await _context.ChatUsers.AddAsync(chatUser);
+            await _context.SaveChangesAsync();
+            return chatUser;
         }
         public async Task<Message> AddMessageToChat(MessageDTO messageDTO)
         {
