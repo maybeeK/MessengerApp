@@ -1,4 +1,5 @@
 using MessengerApp.Server.Data;
+using MessengerApp.Server.Hubs;
 using MessengerApp.Server.Models;
 using MessengerApp.Server.Services;
 using MessengerApp.Server.Services.Interfaces;
@@ -49,7 +50,17 @@ namespace MessengerApp.Server
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
+            builder.Services.AddSignalR();
+            builder.Services.AddResponseCompression(options =>
+            {
+                options.MimeTypes = ResponseCompressionDefaults
+                                    .MimeTypes
+                                    .Concat(new[] { "application/octet-stream" });
+            });
+
             var app = builder.Build();
+
+            app.UseResponseCompression();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -83,6 +94,7 @@ namespace MessengerApp.Server
 
             app.MapRazorPages();
             app.MapControllers();
+            app.MapHub<DirectHub>("/directhub");
             app.MapFallbackToFile("index.html");
 
             app.Run();
