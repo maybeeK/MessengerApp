@@ -37,7 +37,8 @@
     public IUserDirectService UserDirectService { get; set; }
     [Parameter]
     public int? ChatId {get; set;}
-
+    [Parameter]
+    public HubConnection HubConnection { get; set; }
 
     public string ModalDisplay = "none;";
     public string ModalClass = "";
@@ -59,6 +60,8 @@
         Console.WriteLine($"Data:\n{userToAdd.ChatId}\n{userToAdd.UserId}");
 
         await UserDirectService.AddUserToChat(userToAdd);
+
+        await HubConnection.SendAsync("AddUserToChat");
 
         Close();
     }
