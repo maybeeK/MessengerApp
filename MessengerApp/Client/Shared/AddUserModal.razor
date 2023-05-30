@@ -1,5 +1,4 @@
-﻿@using MessengerApp.Client.Sevices.Interfaces;
-<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
+﻿<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -72,6 +71,7 @@
         ModalClass = "Show";
         ShowBackdrop = true;
         Users = (await UserDirectService.GetUsersWhichNotInChat(ChatId.GetValueOrDefault())).ToList();
+        IsAddButtonAvailable();
         StateHasChanged();
     }
 
@@ -80,6 +80,7 @@
         ModalDisplay = "none";
         ModalClass = "";
         ShowBackdrop = false;
+        UserId = null;
         StateHasChanged();
     }
 

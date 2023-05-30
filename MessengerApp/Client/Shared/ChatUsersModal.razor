@@ -1,0 +1,66 @@
+﻿<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User of chat @ChatId</h5>
+            </div>
+            <div class="modal-body">
+                @if (ChatUsers != null)
+                {
+                    <div class="list-group-horizontal">
+
+                        @foreach (var user in ChatUsers)
+                        {
+                            <div class="list-group-item-light">
+                                <p>@user.Email</p>
+                            </div>
+                        }
+
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code {
+    [Inject]
+    public IUserDirectService UserDirectService { get; set; }
+    [Parameter]
+    public int? ChatId { get; set; }
+
+    public List<AppUserDTO> ChatUsers { get; set; }
+
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = false;
+    public bool IsDisabled { get; set; } = true;
+
+
+    public async void Open()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        ChatUsers = (await UserDirectService.GetChatUsers(ChatId.Value)).ToList();
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        StateHasChanged();
+    }
+}

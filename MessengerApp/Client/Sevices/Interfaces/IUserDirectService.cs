@@ -16,5 +16,6 @@ namespace MessengerApp.Client.Sevices.Interfaces
         Task<MessageDTO> SendMessage(MessageDTO messageDTO);
         Task<IEnumerable<AppUserDTO>> GetUsersWhichNotInChat(int chatId);
         Task<ChatUserDTO> RemoveUserFromChat(ChatUserDTO userToRemove);
+        Task<IEnumerable<AppUserDTO>> GetChatUsers(int chatId);
     }
 }

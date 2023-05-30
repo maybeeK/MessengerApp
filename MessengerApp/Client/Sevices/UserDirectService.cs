@@ -127,6 +127,19 @@ namespace MessengerApp.Client.Sevices
             }
         }
 
+        public async Task<IEnumerable<AppUserDTO>> GetChatUsers(int chatId)
+        {
+            var chatUsersResponse = await _httpClient.GetAsync($"api/Direct/Chats/{chatId}/Users");
+
+            if (chatUsersResponse.IsSuccessStatusCode)
+            {
+                var chatUsers = await chatUsersResponse.Content.ReadFromJsonAsync<List<AppUserDTO>>();
+
+                return chatUsers;
+            }
+            return default(IEnumerable<AppUserDTO>);
+        }
+
         public async Task<IEnumerable<AppUserDTO>> GetUsersWhichNotInChat(int chatId)
         {
             try
