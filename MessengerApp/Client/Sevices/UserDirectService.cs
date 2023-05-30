@@ -105,8 +105,7 @@ namespace MessengerApp.Client.Sevices
         {
             try
             {
-                var response = await _httpClient.GetAsync($"api/Direct/{userId}/Chats"); ;
-
+                var response = await _httpClient.GetAsync($"api/Direct/{userId}/Chats");
                 if (response.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
@@ -145,6 +144,25 @@ namespace MessengerApp.Client.Sevices
                     return usersNotInChat;
                 }
                 return default(IEnumerable<AppUserDTO>);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<ChatUserDTO> RemoveUserFromChat(ChatUserDTO userToRemove)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/Direct/RemoveUserFromChat/{userToRemove.UserId}/{userToRemove.ChatId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<ChatUserDTO>();
+                }
+                return default(ChatUserDTO);
             }
             catch (Exception)
             {

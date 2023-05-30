@@ -80,6 +80,16 @@ namespace MessengerApp.Client.Pages
             await UserDirectService.CreateChat(UserId);
             await GetUserChats();
         }
+        public async Task LeaveFromChat()
+        {
+            var userToLeave = new ChatUserDTO() { UserId = UserId, ChatId = OpenedChat.Id };
+
+            await UserDirectService.RemoveUserFromChat(userToLeave);
+
+            OpenedChat = null;
+
+            await GetUserChats();
+        }
         private async Task GetChatMessages()
         {
             ChatMessages = (await UserDirectService.GetChatMessages(OpenedChat.Id)).ToList();
