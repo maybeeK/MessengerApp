@@ -13,5 +13,6 @@ namespace MessengerApp.Server.Services.Interfaces
         Task<ChatUser> CreateChat(string creatorId);
         Task<ChatUser> AddUserToChat(string userId, int chatId);
         Task<Message> AddMessageToChat(MessageDTO messageDTO);
+        Task<ChatUser> RemoveUserFromChat(ChatUser chatUserToDelete);
     }
 }

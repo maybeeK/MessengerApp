@@ -1,4 +1,5 @@
-﻿using MessengerApp.Server.Extentions;
+﻿using MessengerApp.Server.Entyties;
+using MessengerApp.Server.Extentions;
 using MessengerApp.Server.Services.Interfaces;
 using MessengerApp.Shared.DTOs;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -172,6 +173,31 @@ namespace MessengerApp.Server.Controllers
             catch (Exception e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpDelete("[action]/{userId}/{chatId:int}")]
+        public async Task<ActionResult<ChatUserDTO>> RemoveUserFromChat(string userId, int chatId)
+        {
+            try
+            {
+                var userToRemove = new ChatUser() { UserId = userId, ChatId = chatId };
+
+                var removedUser = await _directService.RemoveUserFromChat(userToRemove);
+
+                if (removedUser == null)
+                {
+                    return NotFound();
+                }
+
+                var userDto = removedUser.ConvertToDto();
+
+                return Ok(userDto);
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }

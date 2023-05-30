@@ -16,12 +16,11 @@ namespace MessengerApp.Server.Services
         }
         public async Task<IEnumerable<Chat>> GetUserChats(string userId)
         {
-            return await _context.ChatUsers.Where(e=>e.UserId == userId).Select(e=> new Chat { Id = e.ChatId}).ToListAsync();
+            return await _context.ChatUsers.Where(e => e.UserId == userId).Select(e => new Chat { Id = e.ChatId }).ToListAsync();
         }
-
         public async Task<IEnumerable<Message>> GetChatMessages(int chatId)
         {
-            return await _context.Messages.Where(e=>e.ChatId==chatId).ToListAsync();
+            return await _context.Messages.Where(e => e.ChatId == chatId).ToListAsync();
         }
         public async Task<ChatUser> CreateChat(string creatorId)
         {
@@ -40,7 +39,8 @@ namespace MessengerApp.Server.Services
         }
         public async Task<Message> AddMessageToChat(MessageDTO messageDTO)
         {
-            var message = new Message {
+            var message = new Message
+            {
                 Text = messageDTO.Text,
                 ChatId = messageDTO.ChatId,
                 SenderId = messageDTO.SenderId,
@@ -49,22 +49,33 @@ namespace MessengerApp.Server.Services
 
             await _context.Messages.AddAsync(message);
             await _context.SaveChangesAsync();
-            
+
             return message;
         }
         private async Task<bool> IsUserInChat(string userId, int chatId)
         {
-           return await _context.ChatUsers.AnyAsync(e => e.UserId == userId && e.ChatId == chatId);
+            return await _context.ChatUsers.AnyAsync(e => e.UserId == userId && e.ChatId == chatId);
         }
-
         public async Task<IEnumerable<ApplicationUser>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
-
         public async Task<IEnumerable<ChatUser>> GetChatUsers(int chatId)
         {
-            return await _context.ChatUsers.Where(e=>e.ChatId == chatId).ToListAsync();
+            return await _context.ChatUsers.Where(e => e.ChatId == chatId).ToListAsync();
+        }
+
+        public async Task<ChatUser> RemoveUserFromChat(ChatUser chatUserToDelete)
+        {
+            var item = await _context.ChatUsers.FirstOrDefaultAsync(e => e.UserId == chatUserToDelete.UserId && e.ChatId == chatUserToDelete.ChatId);
+
+            if (item != null)
+            {
+                _context.ChatUsers.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+
+            return item;
         }
     }
 }
