@@ -13,6 +13,7 @@ namespace MessengerApp.Server.Data
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
+            
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -22,5 +23,6 @@ namespace MessengerApp.Server.Data
         public DbSet<ChatUser> ChatUsers { get; set; }
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<OnlineUser> OnlineUsers { get; set; }
     }
 }
