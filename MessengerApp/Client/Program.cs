@@ -23,6 +23,8 @@ namespace MessengerApp.Client
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MessengerApp.ServerAPI"));
 
             builder.Services.AddScoped<IUserDirectService, UserDirectService>();
+            builder.Services.AddScoped<IUserStatusService, UserStatusService>();
+
             builder.Services.AddScoped<HttpClient>(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7235/") });
 
             builder.Services.AddApiAuthorization();

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using static System.Formats.Asn1.AsnWriter;
+using System;
 
 namespace MessengerApp.Server
 {
@@ -19,7 +21,18 @@ namespace MessengerApp.Server
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            {
+                options.UseSqlServer(connectionString);
+            });
+
+            using (var serviceProvider = builder.Services.BuildServiceProvider())
+            using (var serviceScope = serviceProvider.CreateScope())
+            using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
+            {
+                context.OnlineUsers.RemoveRange(context.OnlineUsers);
+                context.SaveChanges();
+            }
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             //builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -46,6 +59,7 @@ namespace MessengerApp.Server
                 .AddIdentityServerJwt();
 
             builder.Services.AddScoped<IDirectService, DirectService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
