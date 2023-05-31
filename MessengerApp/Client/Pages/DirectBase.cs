@@ -12,6 +12,8 @@ namespace MessengerApp.Client.Pages
         [Inject]
         public IUserDirectService UserDirectService { get; set; }
         [Inject]
+        public IUserStatusService UserStatusService { get; set; }
+        [Inject]
         public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
@@ -38,6 +40,14 @@ namespace MessengerApp.Client.Pages
                                     .Build();
                 HubConnection.On("GetMessageOnChat", GetChatMessages);
                 HubConnection.On("GetChat", GetUserChats);
+                HubConnection.On("OnConnectToApp", () =>
+                {
+                    UserStatusService.AddUserToOnlineStatus(new OnlineUserDTO() {
+                        OnlineUserId = UserId,
+                        OnlineUserConnectionId = HubConnection.ConnectionId}
+                    );
+                    Console.WriteLine("Connecting!111111111111111111111111111111111111111111111111111");
+                });
                 await HubConnection.StartAsync();
             }
             catch (Exception)
