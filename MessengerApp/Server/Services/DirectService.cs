@@ -64,7 +64,6 @@ namespace MessengerApp.Server.Services
         {
             return await _context.ChatUsers.Where(e => e.ChatId == chatId).ToListAsync();
         }
-
         public async Task<ChatUser> RemoveUserFromChat(ChatUser chatUserToDelete)
         {
             var item = await _context.ChatUsers.FirstOrDefaultAsync(e => e.UserId == chatUserToDelete.UserId && e.ChatId == chatUserToDelete.ChatId);
