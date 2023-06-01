@@ -61,11 +61,11 @@ namespace MessengerApp.Client.Sevices
             }
         }
 
-        public async Task RemoveUserFromOnlineStatus(string userId)
+        public async Task RemoveUserFromOnlineStatus(string connectionId)
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"api/OnlineUsers/RemoveUserFromCnline/{userId}");
+                var response = await _httpClient.DeleteAsync($"api/OnlineUsers/RemoveUserFromCnline/{connectionId}");
 
                 if (!response.IsSuccessStatusCode)
                 {

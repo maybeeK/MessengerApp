@@ -31,10 +31,10 @@ namespace MessengerApp.Server.Services
 
         public async Task RemoveUserFromOnlineStatus(string userConnId)
         {
-            var user = _context.OnlineUsers.Where(e=>e.OnlineUserConnection== userConnId);
+            var user = await _context.OnlineUsers.FirstOrDefaultAsync(e=>e.OnlineUserConnection==userConnId);
             if (user!=null)
             {
-                _context.OnlineUsers.RemoveRange(user);
+                _context.OnlineUsers.Remove(user);
                 await _context.SaveChangesAsync();
             }
         }

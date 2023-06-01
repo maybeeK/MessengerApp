@@ -9,7 +9,7 @@ namespace MessengerApp.Server.Services.Interfaces
     public interface IUserService
     {
         public Task AddUserToOnlineStatus(string userId, string userConnId);
-        public Task RemoveUserFromOnlineStatus(string userId);
+        public Task RemoveUserFromOnlineStatus(string connectionId);
         public Task<bool> IsUserOnline(string userId);
     }
 }
