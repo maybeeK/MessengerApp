@@ -93,7 +93,10 @@
 </div>
 
 <AddUserModal @ref="AddUserModal" ChatId="OpenedChat?.Id" HubConnection="HubConnection"></AddUserModal>
-<ChatUsersModal @ref="ChatUsersModal" ChatId="OpenedChat?.Id"></ChatUsersModal>
+@if (OpenedChat != null)
+{
+    <ChatUsersModal @ref="ChatUsersModal" ChatId="OpenedChat?.Id"></ChatUsersModal>
+}
 
 @code {
     private AddUserModal AddUserModal { get; set; }

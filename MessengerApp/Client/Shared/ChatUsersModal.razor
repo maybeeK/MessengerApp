@@ -7,11 +7,11 @@
             <div class="modal-body">
                 @if (ChatUsers != null)
                 {
-                    <div class="list-group-horizontal">
+                    <div class="list-group-horizontal col-lg-auto">
 
                         @foreach (var user in ChatUsers)
                         {
-                            <div class="list-group-item-light">
+                            <div class="list-group-item-ligh text-center @IsUserOnline(user)">
                                 <p>@user.Email</p>
                             </div>
                         }
@@ -36,24 +36,32 @@
 @code {
     [Inject]
     public IUserDirectService UserDirectService { get; set; }
+    [Inject]
+    public IUserStatusService UserStatusService { get; set; }
     [Parameter]
     public int? ChatId { get; set; }
 
     public List<AppUserDTO> ChatUsers { get; set; }
+    public List<AppUserDTO> OnlineChatUsers { get; set; } = new();
 
     public string ModalDisplay = "none;";
     public string ModalClass = "";
     public bool ShowBackdrop = false;
     public bool IsDisabled { get; set; } = true;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUsersData();
+    }
 
     public async void Open()
     {
+        await GetUsersData();
         ModalDisplay = "block;";
         ModalClass = "Show";
         ShowBackdrop = true;
-        ChatUsers = (await UserDirectService.GetChatUsers(ChatId.Value)).ToList();
         StateHasChanged();
+        OnlineChatUsers = new();
     }
 
     public void Close()
@@ -62,5 +70,22 @@
         ModalClass = "";
         ShowBackdrop = false;
         StateHasChanged();
+    }
+
+    private async Task GetUsersData()
+    {
+        ChatUsers = (await UserDirectService.GetChatUsers(ChatId.Value)).ToList();
+        ChatUsers.ForEach(async (user) =>
+        {
+            if (await UserStatusService.IsUserOnline(user.Id))
+            {
+                OnlineChatUsers.Add(user);
+            }
+        });
+    }
+
+    private string IsUserOnline(AppUserDTO user)
+    {
+        return OnlineChatUsers.Any(e => e.Id == user.Id) ? "online" : "";
     }
 }
