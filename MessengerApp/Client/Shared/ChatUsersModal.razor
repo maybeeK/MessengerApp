@@ -49,11 +49,6 @@
     public bool ShowBackdrop = false;
     public bool IsDisabled { get; set; } = true;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await GetUsersData();
-    }
-
     public async void Open()
     {
         await GetUsersData();
@@ -61,7 +56,6 @@
         ModalClass = "Show";
         ShowBackdrop = true;
         StateHasChanged();
-        OnlineChatUsers = new();
     }
 
     public void Close()
@@ -74,8 +68,9 @@
 
     private async Task GetUsersData()
     {
+        OnlineChatUsers = new();
         ChatUsers = (await UserDirectService.GetChatUsers(ChatId.Value)).ToList();
-        ChatUsers.ForEach(async (user) =>
+        await Parallel.ForEachAsync(ChatUsers, async (user, _) =>
         {
             if (await UserStatusService.IsUserOnline(user.Id))
             {
