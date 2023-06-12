@@ -1,4 +1,5 @@
-﻿using MessengerApp.Server.Data;
+﻿using MessengerApp.Client.Sevices.Interfaces;
+using MessengerApp.Server.Data;
 using MessengerApp.Server.Entyties;
 using MessengerApp.Server.Models;
 using MessengerApp.Server.Services.Interfaces;
@@ -10,9 +11,11 @@ namespace MessengerApp.Server.Services
     public class DirectService : IDirectService
     {
         private readonly ApplicationDbContext _context;
-        public DirectService(ApplicationDbContext context)
+        private readonly IEncryptionService _encryptionService;
+        public DirectService(ApplicationDbContext context, IEncryptionService encryptionService)
         {
             _context = context;
+            _encryptionService = encryptionService;
         }
         public async Task<IEnumerable<Chat>> GetUserChats(string userId)
         {
@@ -20,7 +23,12 @@ namespace MessengerApp.Server.Services
         }
         public async Task<IEnumerable<Message>> GetChatMessages(int chatId)
         {
-            return await _context.Messages.Where(e => e.ChatId == chatId).ToListAsync();
+            var messages = await _context.Messages.Where(e => e.ChatId == chatId).ToListAsync();
+            await Parallel.ForEachAsync(messages, async (message, _) =>
+            {
+                message.Text = await _encryptionService.DecryptAsync(message.Text, message.SenderId);
+            });
+            return messages;
         }
         public async Task<ChatUser> CreateChat(string creatorId)
         {
@@ -39,18 +47,18 @@ namespace MessengerApp.Server.Services
         }
         public async Task<Message> AddMessageToChat(MessageDTO messageDTO)
         {
-            var message = new Message
+            var encryptedMessage = new Message
             {
-                Text = messageDTO.Text,
+                Text = await _encryptionService.EncryptAsync(messageDTO.Text, messageDTO.SenderId),
                 ChatId = messageDTO.ChatId,
                 SenderId = messageDTO.SenderId,
                 Time = messageDTO.Time
             };
 
-            await _context.Messages.AddAsync(message);
+            await _context.Messages.AddAsync(encryptedMessage);
             await _context.SaveChangesAsync();
 
-            return message;
+            return encryptedMessage;
         }
         private async Task<bool> IsUserInChat(string userId, int chatId)
         {
