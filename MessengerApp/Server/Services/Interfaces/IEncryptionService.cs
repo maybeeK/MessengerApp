@@ -8,7 +8,7 @@ namespace MessengerApp.Client.Sevices.Interfaces
 {
     public interface IEncryptionService
     {
-        Task<string> EncryptAsync(string clearText, string passphrase);
+        Task<string> EncryptAsync(string textToEncrypt, string passphrase);
         Task<string> DecryptAsync(string encrypted, string passphrase);
     }
 }

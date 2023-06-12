@@ -1,3 +1,5 @@
+using MessengerApp.Client.Sevices;
+using MessengerApp.Client.Sevices.Interfaces;
 using MessengerApp.Server.Data;
 using MessengerApp.Server.Hubs;
 using MessengerApp.Server.Models;
@@ -7,8 +9,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using static System.Formats.Asn1.AsnWriter;
-using System;
 
 namespace MessengerApp.Server
 {
@@ -60,6 +60,7 @@ namespace MessengerApp.Server
 
             builder.Services.AddScoped<IDirectService, DirectService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();

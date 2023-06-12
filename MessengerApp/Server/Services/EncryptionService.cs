@@ -20,16 +20,15 @@ namespace MessengerApp.Client.Sevices
             using CryptoStream cryptoStream = new(output, aes.CreateEncryptor(), CryptoStreamMode.Write);
             await cryptoStream.WriteAsync(Encoding.Unicode.GetBytes(textToEncrypt));
             await cryptoStream.FlushFinalBlockAsync();
-            string encrypted = String.Join("", output.ToArray());
-            return encrypted;
+            return String.Join("-",output.ToArray());
         }
-        public async Task<string> DecryptAsync(string encryptedText, string passphrase)
+        public async Task<string> DecryptAsync(string encrypted, string passphrase)
         {
             using Aes aes = Aes.Create();
             aes.Key = DeriveKeyFromPassword(passphrase);
             aes.IV = _initializationVector;
-            byte[] inputBytes = encryptedText.Select(Convert.ToByte).ToArray();
-            using MemoryStream input = new(inputBytes);
+            var encryptedBytes = encrypted.Split("-").Select(e=>Convert.ToByte(e)).ToArray();
+            using MemoryStream input = new(encryptedBytes);
             using CryptoStream cryptoStream = new(input, aes.CreateDecryptor(), CryptoStreamMode.Read);
             using MemoryStream output = new();
             await cryptoStream.CopyToAsync(output);
