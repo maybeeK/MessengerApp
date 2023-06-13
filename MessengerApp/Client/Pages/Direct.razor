@@ -36,7 +36,7 @@
         
             @if (OpenedChat != null)
             {
-                <div class="card-header d-flex justify-content-between align-items-center p-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">ChatID: @OpenedChat.Id</h5>
 
                     <div class="dropstart">
@@ -46,18 +46,18 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownChatMenu">
                             <li>
                                 <button type="button" class="btn dropdown-item" @onclick="() => ChatUsersModal.Open()">
-                                    Chat Users
+                                    <span class="oi oi-people" aria-hidden="true"></span> Chat Users
                                 </button>
                             </li>
                             <li>
                                 <button type="button" class="btn dropdown-item" data-mdb-ripple-color="dark" @onclick="() => AddUserModal.Open()">
-                                    Add User
+                                    <span class="oi oi-plus" aria-hidden="true"></span> Add User
                                 </button>
                             </li>
                             <li class="dropdown-divider"></li>
                             <li>
                                 <button type="button" class="btn dropdown-item" @onclick="LeaveFromChat">
-                                    Leave chat
+                                    <span class="oi oi-account-logout" aria-hidden="true"></span> Leave chat
                                 </button>
                             </li>
                         </ul>
