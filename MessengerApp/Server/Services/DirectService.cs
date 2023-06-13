@@ -24,8 +24,9 @@ namespace MessengerApp.Server.Services
         public async Task<IEnumerable<Message>> GetChatMessages(int chatId)
         {
             var messages = await _context.Messages.Where(e => e.ChatId == chatId).ToListAsync();
-            await Parallel.ForEachAsync(messages, async (message, _) =>
+            await Parallel.ForEachAsync(messages, new ParallelOptions() { MaxDegreeOfParallelism = 1 }, async (message, _) =>
             {
+                message.SenderName = (await _context.Users.FirstAsync(e => e.Id == message.SenderId)).UserName;
                 message.Text = await _encryptionService.DecryptAsync(message.Text, message.SenderId);
             });
             return messages;

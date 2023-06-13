@@ -33,6 +33,7 @@ namespace MessengerApp.Server.Extentions
                         Text = message.Text,
                         ChatId = message.ChatId,
                         SenderId = message.SenderId,
+                        SenderName = message.SenderName,
                         Time = message.Time
                     }).ToList();
         }
