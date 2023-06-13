@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessengerApp.Client", "Mess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessengerApp.Shared", "MessengerApp\Shared\MessengerApp.Shared.csproj", "{235EFFA4-07B2-4149-9651-EB95594652F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessengerApp.Tests", "MessengerApp.Tests\MessengerApp.Tests.csproj", "{D88B23B5-590F-44E4-ADA6-AB4BBA64CBA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessengerApp.Tests", "MessengerApp.Tests\MessengerApp.Tests.csproj", "{D88B23B5-590F-44E4-ADA6-AB4BBA64CBA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
