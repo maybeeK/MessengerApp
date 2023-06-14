@@ -24,7 +24,7 @@
                     {
                         <a class="list-group-item list-group-item-action @IsActive(item) py-3 lh-sm user-select-none" @onclick="()=>OpenChat(item.Id)">
                             <div class="col-10 mb-1 small">
-                                ChatID: @item.Id
+                                @DisplayChatName(item)
                             </div>
                         </a>
                     }
@@ -37,13 +37,18 @@
             @if (OpenedChat != null)
             {
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">ChatID: @OpenedChat.Id</h5>
+                    <h5 class="mb-0">@DisplayChatName(OpenedChat)</h5>
 
                     <div class="dropstart">
                         <a class="btn btn-sm" id="dropdownChatMenu" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="oi oi-menu"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownChatMenu">
+                            <li>
+                                <button type="button" class="btn dropdown-item" @onclick="() => RenameChatModal.Open()">
+                                    <span class="oi oi-text" aria-hidden="true"></span> Rename Chat
+                                </button>
+                            </li>
                             <li>
                                 <button type="button" class="btn dropdown-item" @onclick="() => ChatUsersModal.Open()">
                                     <span class="oi oi-people" aria-hidden="true"></span> Chat Users
@@ -82,7 +87,7 @@
                         {
                             <div class="d-flex flex-row justify-content-start">
                                 <div>
-                                    <p class="small rounded-3 text-muted d-flex justify-content-evenly">@item.SenderName</p>
+                                    <p class="small rounded-3 text-muted d-flex justify-content-evenly">@DisplaySenderName(item)</p>
                                     <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">@item.Text</p>
                                     <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-evenly">@item.Time.ToString("hh:mm:ddd:yyyy")</p>
                                 </div>
@@ -113,11 +118,13 @@
 @if (OpenedChat != null)
 {
     <ChatUsersModal @ref="ChatUsersModal" ChatId="OpenedChat?.Id"></ChatUsersModal>
+    <RenameChatModal @ref="RenameChatModal" HubConnection="HubConnection" ChatToRename="new ChatDTO{Id = OpenedChat.Id, Name = OpenedChat.Name}"></RenameChatModal>
 }
 
 @code {
     private AddUserModal AddUserModal { get; set; }
     private ChatUsersModal ChatUsersModal { get; set; }
+    private RenameChatModal RenameChatModal { get; set; }
 
     public string IsActive(ChatDTO chat)
     {
@@ -133,6 +140,25 @@
         if (args.Key.Equals("Enter"))
         {
             await SendMessage();
+        }
+    }
+
+    private string DisplaySenderName(MessageDTO message)
+    {
+        string senderEmail = message.SenderName;
+        string name = senderEmail.Split('@', StringSplitOptions.RemoveEmptyEntries)[0];
+        return name;
+    }
+
+    private string DisplayChatName(ChatDTO chat)
+    {
+        if (chat.Name != string.Empty && chat.Name != null)
+        {
+            return $"{chat.Name}";
+        }
+        else
+        {
+            return $"ChatID: {chat.Id}";
         }
     }
 }

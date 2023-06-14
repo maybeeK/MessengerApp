@@ -48,6 +48,7 @@ namespace MessengerApp.Client.Pages
                     );
                     Console.WriteLine("Connecting!111111111111111111111111111111111111111111111111111");
                 });
+                HubConnection.On("GetRenamedChat", UpdateChatName);
                 await HubConnection.StartAsync();
             }
             catch (Exception)
@@ -108,6 +109,15 @@ namespace MessengerApp.Client.Pages
         private async Task GetUserChats()
         {
             UserChats = (await UserDirectService.GetChats(UserId)).ToList();
+            StateHasChanged();
+        }
+        private async Task UpdateChatName()
+        {
+            await GetUserChats();
+            if (OpenedChat != null)
+            {
+                OpenedChat = UserChats.First(e => e.Id == OpenedChat.Id);
+            }
             StateHasChanged();
         }
     }

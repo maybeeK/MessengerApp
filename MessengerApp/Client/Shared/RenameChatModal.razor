@@ -1,0 +1,82 @@
+﻿<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chat @ChatToRename.Id</h5>
+            </div>
+            <div class="modal-body">
+                @if (ChatToRename != null)
+                {
+                    <div class="input-group-lg">
+                        <label for="userInputChatName">New Chat Name:</label>
+                        <input @bind="ChatToRename.Name" id="userInputChatName" @onblur="IsRenameBtnAvailable"/>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" disabled="@IsDisabled" class="btn btn-primary" @onclick="Rename">Rename</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code {
+    [Inject]
+    public IUserDirectService UserDirectService { get; set; }
+    [Parameter]
+    public ChatDTO ChatToRename { get; set; }
+    [Parameter]
+    public HubConnection HubConnection { get; set; }
+
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = false;
+
+    private bool IsDisabled { get; set; } = true;
+    private string? OldChatName { get; set; }
+
+    public void Open()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        OldChatName = ChatToRename.Name;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        StateHasChanged();
+    }
+
+    private async Task Rename()
+    {
+        Console.WriteLine($"ID: {ChatToRename.Id}\nName: {ChatToRename.Name}");
+        await UserDirectService.RenameChat(ChatToRename);
+        await HubConnection.SendAsync("ChatRenamed");
+        Close();
+    }
+
+    private void IsRenameBtnAvailable()
+    {
+        if (ChatToRename.Name.Length >= 25 || ChatToRename.Name == OldChatName)
+        {
+            IsDisabled = true;
+        }
+        else
+        {
+            IsDisabled = false;
+        }
+    }
+}
