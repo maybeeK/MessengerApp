@@ -43,5 +43,9 @@ namespace MessengerApp.Server.Hubs
         {
             await Clients.All.SendAsync("GetChat");
         }
+        public async Task ChatRenamed()
+        {
+            await Clients.All.SendAsync("GetRenamedChat");
+        }
     }
 }
