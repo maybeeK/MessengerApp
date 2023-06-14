@@ -19,7 +19,11 @@ namespace MessengerApp.Server.Services
         }
         public async Task<IEnumerable<Chat>> GetUserChats(string userId)
         {
-            return await _context.ChatUsers.Where(e => e.UserId == userId).Select(e => new Chat { Id = e.ChatId }).ToListAsync();
+            return await (from chatUser in _context.ChatUsers
+                          where chatUser.UserId == userId
+                          join chat in _context.Chats
+                          on chatUser.ChatId equals chat.Id
+                          select new Chat() { Id = chat.Id, Name = chat.Name }).ToListAsync();
         }
         public async Task<IEnumerable<Message>> GetChatMessages(int chatId)
         {
@@ -84,6 +88,20 @@ namespace MessengerApp.Server.Services
             }
 
             return item;
+        }
+
+        public async Task<Chat> RenameChat(ChatDTO renamedChat)
+        {
+            var chatToRename = await _context.Chats.FindAsync(renamedChat.Id);
+
+            if (chatToRename != null)
+            {
+                chatToRename.Name = renamedChat.Name;
+                await _context.SaveChangesAsync();
+                return chatToRename;
+            }
+
+            return null;
         }
     }
 }

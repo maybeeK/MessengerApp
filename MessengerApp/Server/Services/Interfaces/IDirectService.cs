@@ -11,6 +11,7 @@ namespace MessengerApp.Server.Services.Interfaces
         Task<IEnumerable<Chat>> GetUserChats(string userId);
         Task<IEnumerable<Message>> GetChatMessages(int chatId);
         Task<ChatUser> CreateChat(string creatorId);
+        Task<Chat> RenameChat(ChatDTO renamedChat);
         Task<ChatUser> AddUserToChat(string userId, int chatId);
         Task<Message> AddMessageToChat(MessageDTO messageDTO);
         Task<ChatUser> RemoveUserFromChat(ChatUser chatUserToDelete);

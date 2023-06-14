@@ -176,6 +176,26 @@ namespace MessengerApp.Server.Controllers
             }
         }
 
+        [HttpPatch("[action]")]
+        public async Task<ActionResult<ChatDTO>> RenameChat(ChatDTO newNamedChat)
+        {
+            try
+            {
+                var renamedChat = await _directService.RenameChat(newNamedChat);
+
+                if (renamedChat == null)
+                {
+                    BadRequest();
+                }
+
+                return Ok(renamedChat);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
         [HttpDelete("[action]/{userId}/{chatId:int}")]
         public async Task<ActionResult<ChatUserDTO>> RemoveUserFromChat(string userId, int chatId)
         {
