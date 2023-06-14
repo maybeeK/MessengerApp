@@ -2,6 +2,9 @@
 using MessengerApp.Shared.DTOs;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace MessengerApp.Client.Sevices
 {
@@ -176,6 +179,28 @@ namespace MessengerApp.Client.Sevices
                     return await response.Content.ReadFromJsonAsync<ChatUserDTO>();
                 }
                 return default(ChatUserDTO);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<ChatDTO> RenameChat(ChatDTO newNamedChat)
+        {
+            try
+            {
+                var jsonRequest = JsonConvert.SerializeObject(newNamedChat);
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json-patch+json");
+
+                var response = await _httpClient.PatchAsync("api/Direct/RenameChat", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<ChatDTO>();
+                }
+                return default;
             }
             catch (Exception)
             {
