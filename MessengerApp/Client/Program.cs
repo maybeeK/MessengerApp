@@ -18,14 +18,14 @@ namespace MessengerApp.Client
 
             builder.Services.AddHttpClient("MessengerApp.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
-
+            
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("MessengerApp.ServerAPI"));
 
             builder.Services.AddScoped<IUserDirectService, UserDirectService>();
             builder.Services.AddScoped<IUserStatusService, UserStatusService>();
 
-            builder.Services.AddScoped<HttpClient>(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7235/") });
+            builder.Services.AddScoped<HttpClient>(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             builder.Services.AddApiAuthorization();
 
