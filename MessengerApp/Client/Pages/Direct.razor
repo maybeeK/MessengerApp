@@ -76,7 +76,7 @@
                     {
                         @if (IsUserMessageOwner(item))
                         {
-                            <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                            <div class="d-flex flex-row justify-content-end mb-1 pt-1">
                                 <div>
                                     <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">@item.Text</p>
                                     <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">@item.Time.ToString("hh:mm:ddd:yyyy")</p>
@@ -87,9 +87,9 @@
                         {
                             <div class="d-flex flex-row justify-content-start">
                                 <div>
-                                    <p class="small rounded-3 text-muted d-flex justify-content-evenly">@DisplaySenderName(item)</p>
-                                    <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">@item.Text</p>
-                                    <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-evenly">@item.Time.ToString("hh:mm:ddd:yyyy")</p>
+                                    <p class="small rounded-3 text-muted d-flex justify-content-start">@DisplaySenderName(item)</p>
+                                    <p class="small p-2 ms-1 mb-1 rounded-3 me-4" style="background-color: #f5f6f7;">@item.Text</p>
+                                    <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-start">@item.Time.ToString("hh:mm:ddd:yyyy")</p>
                                 </div>
                             </div>
                         }
@@ -128,7 +128,7 @@
 
     public string IsActive(ChatDTO chat)
     {
-        return chat.Id == OpenedChat?.Id ? "active" : "";
+        return chat.Id == OpenedChat?.Id ? "bg-info bg-opacity-50" : "";
     }
 
     public bool IsUserMessageOwner(MessageDTO message)
