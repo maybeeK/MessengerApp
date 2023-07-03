@@ -132,9 +132,9 @@
 }
 
 @code {
-    private AddUserModal AddUserModal { get; set; }
-    private ChatUsersModal ChatUsersModal { get; set; }
-    private RenameChatModal RenameChatModal { get; set; }
+    private AddUserModal? AddUserModal { get; set; }
+    private ChatUsersModal? ChatUsersModal { get; set; }
+    private RenameChatModal? RenameChatModal { get; set; }
     private MessageDTO PreviousMsg { get; set; } = new MessageDTO();
 
     public string IsActive(ChatDTO chat)
